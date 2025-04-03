@@ -2,82 +2,60 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  // State for incoming money
-  const [paycheck, setPaycheck] = useState('');
-  const [grossPaycheck, setGrossPaycheck] = useState('');
-  
-  // State for credit cards
+
+  // Initialize state variables
+  const [paycheck, setPaycheck] = useState('')
+  const [grossPaycheck, setGrossPaycheck] = useState('')
   const [creditCards, setCreditCards] = useState([
     { id: 1, balance: '', minimumPayment: '', interestRate: '' }
   ]);
-  
-  // State for car loan
   const [carLoan, setCarLoan] = useState({
     balance: '',
     monthlyPayment: '',
     interestRate: ''
   });
-
-  // State for E-fund balance
   const [emergencyFund, setEmergencyFund] = useState({
     balance: '',
     goal: '',
     deductable: '',
   })
+  const [needsBalance, setNeedsBalance] = useState(0);
+  const [wantsBalance, setWantsBalance] = useState(0);
+  const [savingsBalance, setSavingsBalance] = useState(0);
+  const [recommendations, setRecommendations] = useState([]);
+  // const [employerMatch, setEmployerMatch] = useState({
+  //   matchPercentageCap: 5
+  // })
 
-    // Handle E-fund input change
-    const handleEmergencyFundChange = (e) => {
-      setEmergencyFund(e.target.value);
-    };
-  
-  // State for Employer Match
-  const [employerMatch, setEmployerMatch] = useState({
-    matchPercentageCap: 5
-  })
-
-  // Handle paycheck input change
+  // Initialize event handlers for state changes
+  const handleEmergencyFundChange = (e) => {
+    setEmergencyFund(e.target.value);
+  };
   const handlePaycheckChange = (e) => {
     setPaycheck(e.target.value);
   };
-
   const handleGrossPaycheckChange = (e) => {
     setGrossPaycheck(e.target.value);
   };
-
-  // Handle credit card input changes
   const handleCreditCardChange = (id, field, value) => {
     setCreditCards(creditCards.map(card => 
       card.id === id ? { ...card, [field]: value } : card
     ));
   };
+  const handleCarLoanChange = (field, value) => {
+    setCarLoan({ ...carLoan, [field]: value });
+  };
 
-  // Add a new credit card form
+  // Add a new credit card form section
   const addCreditCard = () => {
     const newId = creditCards.length > 0 ? Math.max(...creditCards.map(card => card.id)) + 1 : 1;
     setCreditCards([...creditCards, { id: newId, balance: '', minimumPayment: '', interestRate: '' }]);
   };
 
-  // Remove a credit card form
+  // Remove a credit card form section
   const removeCreditCard = (id) => {
     setCreditCards(creditCards.filter(card => card.id !== id));
   };
-
-  // Handle car loan input changes
-  const handleCarLoanChange = (field, value) => {
-    setCarLoan({ ...carLoan, [field]: value });
-  };
-
-  // State for needs balance
-  const [needsBalance, setNeedsBalance] = useState(0);
-
-  // State for wants balance
-  const [wantsBalance, setWantsBalance] = useState(0);
-
-  // State for savings balance
-  const [savingsBalance, setSavingsBalance] = useState(0);
-
-  // State for recomendations
-  const [recommendations, setRecommendations] = useState([]);
 
   // Generate financial recommendation
   const generateRecommendation = () => {
@@ -85,21 +63,14 @@ function App() {
     let availableMoney = parseFloat(paycheck);
     let recommendation = [];
 
-    // Do the 50/30/20 Split (Needs/ Wants/ Savings)
-
+    // crreate the 50/30/20 Split (Needs/ Wants/ Savings)
     const calculatedNeedsBalance = availableMoney * 0.5;
     setNeedsBalance(calculatedNeedsBalance);
-    recommendation.push(` Your available Money for necessary Expenses is: $${calculatedNeedsBalance.toFixed(2)}. Remember this should all expenses necessary to live including minimum payments on all debts!`)
-
     const calculatedSavingsBalance = availableMoney * .2
     setSavingsBalance(calculatedSavingsBalance);
-    recommendation.push(` You should be saving at least: $${savingsBalance.toFixed(2)}`)
-
     const calculatedWantsBalance = availableMoney * .3
     setWantsBalance(calculatedWantsBalance);
-    recommendation.push(` Your remaining money is: $${wantsBalance.toFixed(2)}. Spend this on whatever you want!`)
     
-    recommendation.push()
     // Account for credit card minimum payments
     let totalMinPayments = 0;
     creditCards.forEach(card => {
@@ -168,7 +139,7 @@ function App() {
               id="grossPaycheck"
               value={grossPaycheck}
               onChange={handleGrossPaycheckChange}
-              placeholder="Enter paycheck amount"
+              placeholder="Enter Gross paycheck amount"
             />
           </div>
         </section>
@@ -237,7 +208,7 @@ function App() {
         <section className="credit-cards-section">
           <h2 style={{ fontSize: '2rem' }}>Credit Cards</h2>
           {creditCards.map(card => (
-            <div key={card.id} className="credit-card-form">
+            <div key={card.id} className="credit-card-form" data-testid="credit-card-form">
               <h3 style={{ fontSize: '1.5rem' }}>Credit Card {card.id}</h3>
               <div className="form-group">
                 <label style={{ fontSize: '1.2rem' }}>Balance ($):</label>
@@ -283,9 +254,9 @@ function App() {
         <section className="split-section">
           <h2 style={{ fontSize: '2rem' }}>Your 50/30/20 Split</h2>
           <div className="needs-wants-savings">
-            <div style={{ fontSize: '1.5rem' }}><strong>Needs:</strong> ${needsBalance.toFixed(2)}</div>
-            <div style={{ fontSize: '1.5rem' }}><strong>Wants:</strong> ${wantsBalance.toFixed(2)}</div>
-            <div style={{ fontSize: '1.5rem' }}><strong>Savings:</strong> ${savingsBalance.toFixed(2)}</div>
+            <div data-testid="needs-display" style={{ fontSize: '1.5rem' }}><strong>Needs:</strong> ${needsBalance.toFixed(2)}</div>
+            <div data-testid="wants-display" style={{ fontSize: '1.5rem' }}><strong>Wants:</strong> ${wantsBalance.toFixed(2)}</div>
+            <div data-testid="savings-display" style={{ fontSize: '1.5rem' }}><strong>Savings:</strong> ${savingsBalance.toFixed(2)}</div>
           </div>
         </section>
 
