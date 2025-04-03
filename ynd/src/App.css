@@ -31,7 +31,7 @@
 }
 
 /* Full width for recommendations and split sections */
-.recommendations-section, .split-section{
+.recommendations-section, .split-section, .button-section{
   grid-column: 1 / -1;
 }
 

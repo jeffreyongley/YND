@@ -116,12 +116,16 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1 style={{ fontSize: '3rem' }}>Your Next Dollar</h1>
-        <p style={{ fontSize: '1.5rem' }}>Obey the FOO! (Financial Order of Operations)</p>
-        <p style={{ fontSize: '1.5rem' }}>Discover the most efficient place for every soldier in your army of dollars!</p>
+        <h1 style={{ fontSize: '4rem' }}>Your Next Dollar</h1>
+      </header>
+      <header className="App-header">
+        <p style={{ fontSize: '1.5rem' }}></p>
+      <p style={{ fontSize: '1.5rem' }}>Enter your most recent paycheck and current financial situation to view recommendations for debt repayment and financial goals according to the Financial Order of Operations viewable <a href="https://moneyguy.com/guide/foo/" style={{ color: '#61dafb', textDecoration: 'underline' }}>here.</a></p>
+
       </header>
       
       <main className="App-main">
+        
         <section className="income-section">
           <h2 style={{ fontSize: '2rem' }}>Income</h2>
           <div className="form-group">
@@ -251,6 +255,10 @@ function App() {
           </button>
         </section>
 
+        <section className="button-section" style={{ marginTop: '5px', textAlign: 'center'}}>
+          <button data-testid="submit-button" onClick={generateRecommendation} style={{ height: '4rem', width: "20rem", fontSize: '1.5rem' }}>Submit</button>
+        </section>
+
         <section className="split-section">
           <h2 style={{ fontSize: '2rem' }}>Your 50/30/20 Split</h2>
           <div className="needs-wants-savings">
@@ -262,7 +270,6 @@ function App() {
 
         <section className="recommendations-section">
           <h2 style={{ fontSize: '2rem' }}>Financial Recommendations</h2>
-          <button onClick={generateRecommendation}>Generate Recommendations</button>
           <div className="recommendations">
             {recommendations.length > 0 ? (
               <ul>

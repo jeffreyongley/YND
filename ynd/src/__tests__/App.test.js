@@ -51,7 +51,7 @@ describe('App Component Tests', () => {
     const paycheckInput = screen.getByPlaceholderText("Enter paycheck amount");
     fireEvent.change(paycheckInput, { target: { value: '1000' } });
 
-    const generateButton = screen.getByText("Generate Recommendations");
+    const generateButton = screen.getByTestId("submit-button");
     fireEvent.click(generateButton);
 
     const needsElement = screen.getByTestId('needs-display');
