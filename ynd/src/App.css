@@ -30,8 +30,8 @@
   gap: 20px;
 }
 
-/* Full width for recommendations section */
-.recommendations-section {
+/* Full width for recommendations and split sections */
+.recommendations-section, .split-section{
   grid-column: 1 / -1;
 }
 
@@ -172,6 +172,13 @@ h2 {
 
 .recommendations li:last-child {
   margin-bottom: 0;
+}
+
+.needs-wants-savings{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
 }
 
 @media (max-width: 768px) {

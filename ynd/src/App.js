@@ -18,6 +18,23 @@ function App() {
     interestRate: ''
   });
 
+  // State for E-fund balance
+  const [emergencyFund, setEmergencyFund] = useState({
+    balance: '',
+    goal: '',
+    deductable: '',
+  })
+
+    // Handle E-fund input change
+    const handleEmergencyFundChange = (e) => {
+      setEmergencyFund(e.target.value);
+    };
+  
+  // State for Employer Match
+  const [employerMatch, setEmployerMatch] = useState({
+    matchPercentageCap: 5
+  })
+
   // Handle paycheck input change
   const handlePaycheckChange = (e) => {
     setPaycheck(e.target.value);
@@ -50,12 +67,39 @@ function App() {
     setCarLoan({ ...carLoan, [field]: value });
   };
 
+  // State for needs balance
+  const [needsBalance, setNeedsBalance] = useState(0);
+
+  // State for wants balance
+  const [wantsBalance, setWantsBalance] = useState(0);
+
+  // State for savings balance
+  const [savingsBalance, setSavingsBalance] = useState(0);
+
+  // State for recomendations
+  const [recommendations, setRecommendations] = useState([]);
+
   // Generate financial recommendation
   const generateRecommendation = () => {
     // Simple recommendation logic - to be expanded
     let availableMoney = parseFloat(paycheck);
     let recommendation = [];
+
+    // Do the 50/30/20 Split (Needs/ Wants/ Savings)
+
+    const calculatedNeedsBalance = availableMoney * 0.5;
+    setNeedsBalance(calculatedNeedsBalance);
+    recommendation.push(` Your available Money for necessary Expenses is: $${calculatedNeedsBalance.toFixed(2)}. Remember this should all expenses necessary to live including minimum payments on all debts!`)
+
+    const calculatedSavingsBalance = availableMoney * .2
+    setSavingsBalance(calculatedSavingsBalance);
+    recommendation.push(` You should be saving at least: $${savingsBalance.toFixed(2)}`)
+
+    const calculatedWantsBalance = availableMoney * .3
+    setWantsBalance(calculatedWantsBalance);
+    recommendation.push(` Your remaining money is: $${wantsBalance.toFixed(2)}. Spend this on whatever you want!`)
     
+    recommendation.push()
     // Account for credit card minimum payments
     let totalMinPayments = 0;
     creditCards.forEach(card => {
@@ -90,7 +134,7 @@ function App() {
       recommendation.push(`Warning: Your expenses exceed your paycheck by $${Math.abs(availableMoney).toFixed(2)}`);
     }
     
-    return recommendation;
+    setRecommendations(recommendation);
   };
 
   // // Format currency input
@@ -101,16 +145,16 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Your Next Dollar</h1>
-        <p>Obey the FOO! (Financial Order of Operations)</p>
-        <p>Discover the most efficient place for every soldier in your army of dollars!</p>
+        <h1 style={{ fontSize: '3rem' }}>Your Next Dollar</h1>
+        <p style={{ fontSize: '1.5rem' }}>Obey the FOO! (Financial Order of Operations)</p>
+        <p style={{ fontSize: '1.5rem' }}>Discover the most efficient place for every soldier in your army of dollars!</p>
       </header>
       
       <main className="App-main">
         <section className="income-section">
-          <h2>Income</h2>
+          <h2 style={{ fontSize: '2rem' }}>Income</h2>
           <div className="form-group">
-            <label htmlFor="paycheck">Net Paycheck Amount ($):</label>
+            <label htmlFor="paycheck" style={{ fontSize: '1.2rem' }}>Net Paycheck Amount ($):</label>
             <input
               type="number"
               id="paycheck"
@@ -118,7 +162,7 @@ function App() {
               onChange={handlePaycheckChange}
               placeholder="Enter paycheck amount"
             />
-            <label htmlFor="grossPaycheck">Gross Paycheck Amount ($):</label>
+            <label htmlFor="grossPaycheck" style={{ fontSize: '1.2rem' }}>Gross Paycheck Amount ($):</label>
             <input
               type="number"
               id="grossPaycheck"
@@ -128,11 +172,41 @@ function App() {
             />
           </div>
         </section>
+
+        <section className="emergency-section">
+          <h2 style={{ fontSize: '2rem' }}>Emergency Fund</h2>
+          <div className="form-group">
+            <label htmlFor="paycheck" style={{ fontSize: '1.2rem' }}>Emergency Fund Balance ($):</label>
+            <input
+              type="number"
+              id="emergencyFundBalance"
+              value={emergencyFund.balance}
+              onChange={handleEmergencyFundChange}
+              placeholder="Remember this should be in cash or cash equivalents."
+            />
+            <label htmlFor="paycheck" style={{ fontSize: '1.2rem' }}>Emergency Fund Goal ($):</label>
+            <input
+              type="number"
+              id="emergencyFundGoal"
+              value={emergencyFund.goal}
+              onChange={handleEmergencyFundChange}
+              placeholder="Normally 3-6 months of expenses."
+            />
+            <label htmlFor="paycheck" style={{ fontSize: '1.2rem' }}>What is your Largest deductable?</label>
+            <input
+              type="number"
+              id="emergencyFundDeductable"
+              value={emergencyFund.deductable}
+              onChange={handleEmergencyFundChange}
+              placeholder="Normally from health insurance or car insurance."
+            />
+          </div>
+        </section>
         
         <section className="car-loan-section">
-          <h2>Car Loan</h2>
+          <h2 style={{ fontSize: '2rem' }}>Car Loan</h2>
           <div className="form-group">
-            <label>Loan Balance ($):</label>
+            <label style={{ fontSize: '1.2rem' }}>Loan Balance ($):</label>
             <input
               type="number"
               value={carLoan.balance}
@@ -141,7 +215,7 @@ function App() {
             />
           </div>
           <div className="form-group">
-            <label>Monthly Payment ($):</label>
+            <label style={{ fontSize: '1.2rem' }}>Monthly Payment ($):</label>
             <input
               type="number"
               value={carLoan.monthlyPayment}
@@ -150,7 +224,7 @@ function App() {
             />
           </div>
           <div className="form-group">
-            <label>Interest Rate (%):</label>
+            <label style={{ fontSize: '1.2rem' }}>Interest Rate (%):</label>
             <input
               type="number"
               value={carLoan.interestRate}
@@ -160,14 +234,13 @@ function App() {
           </div>
         </section>
 
-        <section className="credit-cards-section wide-section">
-        {/* <div className="credit-cards-grid"> */}
-          <h2>Credit Cards</h2>
+        <section className="credit-cards-section">
+          <h2 style={{ fontSize: '2rem' }}>Credit Cards</h2>
           {creditCards.map(card => (
             <div key={card.id} className="credit-card-form">
-              <h3>Credit Card {card.id}</h3>
+              <h3 style={{ fontSize: '1.5rem' }}>Credit Card {card.id}</h3>
               <div className="form-group">
-                <label>Balance ($):</label>
+                <label style={{ fontSize: '1.2rem' }}>Balance ($):</label>
                 <input
                   type="number"
                   value={card.balance}
@@ -176,7 +249,7 @@ function App() {
                 />
               </div>
               <div className="form-group">
-                <label>Minimum Payment ($):</label>
+                <label style={{ fontSize: '1.2rem' }}>Minimum Payment ($):</label>
                 <input
                   type="number"
                   value={card.minimumPayment}
@@ -185,7 +258,7 @@ function App() {
                 />
               </div>
               <div className="form-group">
-                <label>Interest Rate (%):</label>
+                <label style={{ fontSize: '1.2rem' }}>Interest Rate (%):</label>
                 <input
                   type="number"
                   value={card.interestRate}
@@ -205,20 +278,29 @@ function App() {
           <button type="button" onClick={addCreditCard} className="add-button">
             Add Another Credit Card
           </button>
-        {/* </div> */}
         </section>
 
-        <section className="recommendations-section wide-section">
-          <h2>Financial Recommendations</h2>
+        <section className="split-section">
+          <h2 style={{ fontSize: '2rem' }}>Your 50/30/20 Split</h2>
+          <div className="needs-wants-savings">
+            <div style={{ fontSize: '1.5rem' }}><strong>Needs:</strong> ${needsBalance.toFixed(2)}</div>
+            <div style={{ fontSize: '1.5rem' }}><strong>Wants:</strong> ${wantsBalance.toFixed(2)}</div>
+            <div style={{ fontSize: '1.5rem' }}><strong>Savings:</strong> ${savingsBalance.toFixed(2)}</div>
+          </div>
+        </section>
+
+        <section className="recommendations-section">
+          <h2 style={{ fontSize: '2rem' }}>Financial Recommendations</h2>
+          <button onClick={generateRecommendation}>Generate Recommendations</button>
           <div className="recommendations">
-            {paycheck ? (
+            {recommendations.length > 0 ? (
               <ul>
-                {generateRecommendation().map((rec, index) => (
-                  <li key={index}>{rec}</li>
+                {recommendations.map((rec, index) => (
+                  <li key={index} style={{ fontSize: '1.2rem' }}>{rec}</li>
                 ))}
               </ul>
             ) : (
-              <p>Enter your paycheck amount to get recommendations.</p>
+              <p style={{ fontSize: '1.2rem' }}>Enter your paycheck amount and click "Generate Recommendations" to get recommendations.</p>
             )}
           </div>
         </section>
